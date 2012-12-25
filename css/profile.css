@@ -1,0 +1,67 @@
+#header
+{
+    background-color:black;
+    border-bottom: 1px solid #171616;
+   
+}
+
+#content
+{
+    background-color: whitesmoke;
+/*   background-image: linear-gradient(bottom, rgb(9,99,148) 6%, rgb(24,8,148) 100%);
+background-image: -o-linear-gradient(bottom, rgb(9,99,148) 6%, rgb(24,8,148) 100%);
+background-image: -moz-linear-gradient(bottom, rgb(9,99,148) 6%, rgb(24,8,148) 100%);
+background-image: -webkit-linear-gradient(bottom, rgb(9,99,148) 6%, rgb(24,8,148) 100%);
+background-image: -ms-linear-gradient(bottom, rgb(9,99,148) 6%, rgb(24,8,148) 100%);*/
+    
+}
+
+#content .container-fluid 
+{
+    margin-top: 75px;
+    padding-top: 20px;
+    padding-bottom: 300px;
+    
+}
+
+#sidenav
+{
+    
+    background-color: white;
+    border-radius: 10px;
+    border: 7px solid #cccccc;
+    
+}
+
+#sidenav b
+{
+    
+    
+}
+
+#sidenav ul
+{
+    
+  
+   
+    
+}
+#content-body
+{
+    background-color: white;
+    padding: 5px;
+    border: 10px solid #cccccc;
+    border-radius: 10px;
+    
+    
+    
+}
+
+#content-context
+{
+    padding:10px;
+    margin: 9px;
+    border: 1px solid whitesmoke;
+    border-radius: 7px;
+}
+

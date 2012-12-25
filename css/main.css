@@ -1,0 +1,17 @@
+#login .header
+{
+    background-color:#000000;
+}
+
+#login .form
+{
+  margin-top: 50px;
+  
+}
+
+.form .container .span5
+{
+  padding: 9px;
+  background-color: #F3F3F3;
+  border: 1px solid ;
+}
