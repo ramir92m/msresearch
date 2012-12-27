@@ -60,14 +60,15 @@
                     if(isset($_GET['error']))
                     {
                         $err = $_GET['error'];
-                        echo "<div class='offset1'>";
+                        echo "<div><center>";
                         switch($err)
                         {
                             case 'err01': echo "<p>Invalid Username<p>";break;
                             case 'err02': echo "<p>Unknown Account<p>";break;
                             case 'err03': echo "<p>Wrong Password<p>";break;
+                            case 'err04': echo "<p>Choose User Type To Login<p>";break;
                         }
-                        echo "</div>";
+                        echo "</center></div>";
                         
                     }
                 
