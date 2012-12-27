@@ -972,7 +972,7 @@ if(!isset($_SESSION['stud_ID']))
                                   echo "<script type='text/javascript'>
                                   $(document).ready(function(){
                                       setInterval(function(){
-                                          $.ajax({url:'modules/message.php',cache:false,success: function(data){
+                                          $.ajax({url:'modules/message.php?type=announce',cache:false,success: function(data){
                                                     $('#msg').html(data)
                                             }});
                                       },2000);
