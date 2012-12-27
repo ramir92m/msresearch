@@ -1,10 +1,11 @@
 <?php
 
 session_start();
-if(!isset($_SESSION))
+if(!isset($_SESSION['acct_ID']))
 {
     header("Location: index.php");
 }
+
 
     
 ?>
@@ -23,18 +24,19 @@ if(!isset($_SESSION))
             
         <body>
   
-            
+            <script src="js/jquery-1.8.3.js"></script>
+           <script src="js/bootstrap.min.js"></script>
            
            <div class="navbar navbar-inverse navbar-fixed-top" id="header">
                <div class="navbar-inner">
                    <div class="container">
                        
-                       <a class="brand" href="#"><img src="img/title2.png" /></a>
+                       <a class="brand" href="admin.php"><img src="img/title3.png" /></a>
                        <div class="nav-collapse ">
                            <ul class="nav pull-right">
                                <li>
                                    <form class="navbar-search" action="#" method="post">
-                                          
+                                          <br/>
                                           <input type="text" placeholder="Search Student" />
 <!--                                          <select class="span1">
                                               <option>BSIT</option>
@@ -45,14 +47,17 @@ if(!isset($_SESSION))
                                    </form>
                                </li>
                                <li class="dropdown">
+                                   <br/>
                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                       <span><i class="icon-user"></i><?php echo $_SESSION['fname']." ".$_SESSION['lname']; ?> <span class="caret"></span> </span>
+                                       <span><i class="icon-user"></i><?php echo $_SESSION['empFname']." ".$_SESSION['empLname']; ?> <span class="caret"></span> </span>
                                    </a>
                                    <ul class="dropdown-menu">
-                                       <li><a href="#"><i class="icon-headphones"></i>&nbsp;Profile</a></li>
-                                       <li><a href="index.php"><i class="icon-off"></i>&nbsp;Logout</a></li>
+                                       <li><a href="admin.php?type=profile"><i class="icon-headphones"></i>&nbsp;Profile</a></li>
+                                       <li><a href="transaction.php?trans=logout"><i class="icon-off"></i>&nbsp;Logout</a></li>
                                    </ul>
+                                   
                                </li>
+                               
                            </ul>
                        </div>
                    </div>
@@ -67,14 +72,16 @@ if(!isset($_SESSION))
                    <div class="row-fluid">
                        <div class="span2 offset1">
                            <div id="sidenav">
-                               <b>Administrator Menu</b>
+                               
+                               
+                               <b><?php echo $_SESSION['occupation'] ?> Menu</b>
                                
                                <div>
                                    <ul class="nav nav-pills nav-stacked">
                                        <li><a href="admin.php"><i class="icon-home"></i> Home</a></li>
                                        
                                        <li><a href="admin.php?type=message"><i class="icon-file"></i> Message</a></li>
-                                       <li><a href="#"><i class="icon-wrench"></i> Student Status</a></li>
+                                       <li><a href="admin.php?type=status"><i class="icon-wrench"></i> Student Status</a></li>
                                        <li><a href="#"><i class="icon-wrench"></i> OJT Forms</a></li>
                                        <li><a href="#"><i class="icon-edit"></i> OJT Host Evaluation</a></li>
                                        <li><a href="#"><i class="icon-file"></i> Recomendation Letter</a></li>
@@ -129,8 +136,26 @@ if(!isset($_SESSION))
                               
                               if($getType == 'message')
                               {
+                                  
                                   echo '<fieldset>
-                                        <legend>Message</legend>
+                                        <legend>Message</legend>';
+                                  
+                                  echo "<script type='text/javascript'>
+                                  $(document).ready(function(){
+                                      setInterval(function(){
+                                          $.ajax({url:'modules/message.php?type=message',cache:false,success: function(data){
+                                                    $('#msg').html(data)
+                                            }});
+                                      },1000);
+                                  });
+                              </script>
+                              
+                               <div id='msg'></div>
+                                
+
+                                ";
+                                  echo'
+                                      
                                      <form action="modules/sendmsg.php" method="post">       
                                     <div id="msgbody" class="span12"></div>
                                     <hr/>
@@ -243,37 +268,26 @@ if(!isset($_SESSION))
                               }
                                if($getType == "profile")
                                {
-                                   echo "<fieldset>
-               <legend>Student Profile</legend>
-               
-               <table>
-                   <tr>
-                       <td class='span2'><strong>Name</strong></td>
-                       <td class='span4'>".$_SESSION['fname']." ".$_SESSION['lname']."</td>
-                       <td class='span2'><strong>Student ID</strong></td>
-                       <td class='span4'>".$_SESSION['stud_ID']."</td>
-                   </tr>
-                   <tr>
-                       <td class='span2'><strong>Age</strong></td>
-                       <td class='span4'>20</td>
-                       <td class='span2'><strong>Course</strong></td>
-                       <td class='span4'>B".$_SESSION['course']."</td>
-                   </tr>
-                   <tr>
-                       <td class='span2'><strong>Address</strong></td>
-                       <td class='span4'>Sample Place at Sample World</td>
-                   </tr>
-                   <tr>
-                       <td class='span2'><strong>Phone Number</strong></td>
-                       <td class='span4'>09156868213</td>
-                   </tr>
-                   <tr>
-                       <td class='span2'><strong>Email</strong></td>
-                       <td class='span4'>superemail@yahoo.com</td>
-                   </tr>
-               </table>
-               <br/>
-           </fieldset>";
+                                                    echo "<fieldset>
+                                <legend>".$_SESSION['occupation']." Profile</legend>
+
+                                <table>
+                                    <tr>
+                                        <td class='span2'><strong>Name</strong></td>
+                                        <td class='span4'>".$_SESSION['empFname']." ".$_SESSION['empLname']."</td>
+                                        <td class='span2'><strong>Employee ID</strong></td>
+                                        <td class='span4'>".$_SESSION['acct_ID']."</td>
+                                    </tr>
+                                    <tr>
+                                        <td class='span2'><strong>Occupation</strong></td>
+                                        <td class='span4'>".$_SESSION['occupation']."</td>
+                                        <td class='span2'><strong>Course Handle</strong></td>
+                                        <td class='span4'>".$_SESSION['coursehandle']."</td>
+                                    </tr>
+
+                                </table>
+                                <br/>
+                            </fieldset>";
                                }
                                
                                if($getType == "ojtforms")
@@ -310,6 +324,26 @@ if(!isset($_SESSION))
                               
                               
                               }
+                              else
+                              {
+                                  echo "<script type='text/javascript'>
+                                  $(document).ready(function(){
+                                      setInterval(function(){
+                                          $.ajax({url:'modules/message.php?type=announce',cache:false,success: function(data){
+                                                    $('#msg').html(data)
+                                            }});
+                                      },2000);
+                                  });
+                              </script>
+                              
+                               <div id='msg'></div>
+                                
+
+                                ";
+                                      
+                                            
+                                    
+                              }
                               
                               ?>
                        </div>
@@ -329,8 +363,7 @@ if(!isset($_SESSION))
                </div>
            </div>
            
-           <script src="js/jquery-1.8.3.js"></script>
-           <script src="js/bootstrap.min.js"></script>
+           
 	</body>
 
 	
