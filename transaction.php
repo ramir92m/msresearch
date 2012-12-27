@@ -9,6 +9,8 @@ $type = $_GET['trans'];
 $acct = new Database();
 $stud = new Account();
 
+
+//Registration Form
 if($type == 'reg')
 {
     $postdata = array(
@@ -26,7 +28,7 @@ if($type == 'reg')
     
     $acct->insertData($postdata, 'stud_info');
 }
-
+//Login Form
 elseif($type == 'login')
 {
     $id = $_POST['stud_ID'];
@@ -117,7 +119,7 @@ elseif($type == 'login')
     }
     else
     {
-        echo "can you login with a \'login as\' option? fucktard";
+        header("Location: login.php?error=err04");
     }
     
     
