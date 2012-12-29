@@ -136,17 +136,14 @@ if(!isset($_SESSION['acct_ID']))
                               
                               if($getType == 'message')
                               {
-                                  
-                                  echo '<fieldset>
-                                        <legend>Message</legend>';
-                                  
+                                 
                                   echo "<script type='text/javascript'>
                                   $(document).ready(function(){
                                       setInterval(function(){
-                                          $.ajax({url:'modules/message.php?type=message',cache:false,success: function(data){
+                                          $.ajax({url:'modules/inbox.php',cache:false,success: function(data){
                                                     $('#msg').html(data)
                                             }});
-                                      },1000);
+                                      },2000);
                                   });
                               </script>
                               
@@ -154,20 +151,6 @@ if(!isset($_SESSION['acct_ID']))
                                 
 
                                 ";
-                                  echo'
-                                      
-                                     <form action="modules/sendmsg.php" method="post">       
-                                    <div id="msgbody" class="span12"></div>
-                                    <hr/>
-                                    <input type="text" class="span3" placeholder="Employee Name" />&nbsp;<select class="span2">
-                                        <option>Announce</option>
-                                        <option>Message</option>
-                                    </select><br/>
-                                    <textarea name="msg" placeholder="Search Message" class="span5" style="resize: none;"></textarea><br/>
-                                    <input type="submit" id="sendmsg" class="btn btn-primary" />
-                                    </fieldset>
-                                    </form>
-                                    ';
                                     
                               }
                               if($getType == "recoletter")
