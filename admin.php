@@ -1,10 +1,11 @@
 <?php
-
+include('class/Database.php');
 session_start();
 if(!isset($_SESSION['acct_ID']))
 {
     header("Location: index.php");
 }
+$db = new Database();
 
 
     
@@ -26,6 +27,42 @@ if(!isset($_SESSION['acct_ID']))
   
             <script src="js/jquery-1.8.3.js"></script>
            <script src="js/bootstrap.min.js"></script>
+           
+           <!-- All Client-Side transaction will be all here -->
+           
+           <script type="text/javascript">
+               $(document).ready(function(){
+                   $('[type="text"]').val(null);
+                   
+                   
+                   
+                   //quiz function
+                   $('#quiz1,#quiz2,#quiz3,#quiz4,#quiz5,#quiz6,#quiz7').keyup(function(){
+                       
+                       var quiz = "quiz";
+                       var gradeQuiz = 0;
+                       var total = 0;
+                       
+                       for(var i=1; i<=7;i++)
+                           {
+                                   if($('#'+quiz+i+'').val() == '')
+                                   {
+                                       continue;
+                                   }
+                                   else
+                                       {
+                                           gradeQuiz += parseInt($('#'+quiz+i+'').val());
+                                           total++;
+                                       }
+                           }
+                           
+                           $('#avequiz').html(gradeQuiz/total);
+                       
+                       
+                   });
+                   
+               });
+           </script>
            
            <div class="navbar navbar-inverse navbar-fixed-top" id="header">
                <div class="navbar-inner">
@@ -77,15 +114,15 @@ if(!isset($_SESSION['acct_ID']))
                                <b><?php echo $_SESSION['occupation'] ?> Menu</b>
                                
                                <div>
-                                   <ul class="nav nav-pills nav-stacked">
+                                   <ul class="nav nav-pills nav-stacked" style="height: 20%;">
                                        <li><a href="admin.php"><i class="icon-home"></i> Home</a></li>
                                        
                                        <li><a href="admin.php?type=message"><i class="icon-file"></i> Message</a></li>
-                                       <li><a href="admin.php?type=status"><i class="icon-wrench"></i> Student Status</a></li>
-                                       <li><a href="#"><i class="icon-wrench"></i> OJT Forms</a></li>
-                                       <li><a href="#"><i class="icon-edit"></i> OJT Host Evaluation</a></li>
+                                       <li><a href="admin.php?type=studentlist"><i class="icon-wrench"></i> Student List</a></li>
+<!--                                       <li><a href="#"><i class="icon-wrench"></i>Search By Place</a></li>
+                                       <li><a href="#"><i class="icon-edit"></i>Search Grade</a></li>
                                        <li><a href="#"><i class="icon-file"></i> Recomendation Letter</a></li>
-                                       <li><a href="#"><i class="icon-calendar"></i> Schedule of Activities</a></li>
+                                       <li><a href="#"><i class="icon-calendar"></i> Schedule of Activities</a></li>-->
                                    </ul>
                                </div>
                            </div>
@@ -99,18 +136,18 @@ if(!isset($_SESSION['acct_ID']))
                                   {
                                       if($_GET['type'] == "message")
                                       {
-                                          echo '<li><a href="main.php">Home</a> <span class="divider">/</span></li>';
-                                          echo '<li><a href="main.php?type=evalform">Message</a> <span class="divider">/</span></li>';
+                                          echo '<li><a href="admin.php">Home</a> <span class="divider">/</span></li>';
+                                          echo '<li><a href="admin.php?type=message">Message</a> <span class="divider">/</span></li>';
                                       }
-                                      elseif($_GET['type'] == "recoletter")
+                                      elseif($_GET['type'] == "studentlist")
                                       {
-                                          echo '<li><a href="main.php">Home</a> <span class="divider">/</span></li>';
-                                          echo '<li><a href="main.php?type=recoletter">Recommendation Letter</a> <span class="divider">/</span></li>';
+                                          echo '<li><a href="admin.php">Home</a> <span class="divider">/</span></li>';
+                                          echo '<li><a href="admin.php?type=studentlist">Official Student List</a> <span class="divider">/</span></li>';
                                       }
                                       elseif($_GET['type'] == "profile")
                                       {
-                                          echo '<li><a href="main.php">Home</a> <span class="divider">/</span></li>';
-                                          echo '<li><a href="main.php?type=profile">Profile</a> <span class="divider">/</span></li>';
+                                          echo '<li><a href="admin.php">Home</a> <span class="divider">/</span></li>';
+                                          echo '<li><a href="admin.php?type=profile">Profile</a> <span class="divider">/</span></li>';
                                       }
                                       elseif($_GET['type'] == "ojtforms")
                                       {
@@ -136,7 +173,23 @@ if(!isset($_SESSION['acct_ID']))
                               
                               if($getType == 'message')
                               {
-                                 
+                                 echo '<div class="tabbable">  
+                                            <ul class="nav nav-tabs">
+                                                <li class="active"><a href="#tab1" data-toggle="tab">Message</a></li>
+                                                <li><a href="#tab2" data-toggle="tab">Compose New Message</a></li>
+                                            </ul>
+                                            <div class="tab-content">
+                                                
+                                                <div class="tab-pane active" id="tab1">
+                                                    <div class="msg-header">
+                                                        <div class="span2">
+                                                            <b>From</b>
+                                                        </div>
+                                                    <div class="span9">
+                                                        <b>Messages</b>
+                                                    </div>       
+                                                </div>';
+                                                
                                   echo "<script type='text/javascript'>
                                   $(document).ready(function(){
                                       setInterval(function(){
@@ -151,104 +204,194 @@ if(!isset($_SESSION['acct_ID']))
                                 
 
                                 ";
+                                  
+                                  echo '
+                                                </div>
+                                                <div class="tab-pane" id="tab2">
+                                                    <fieldset>
+                                                    <legend>Inbox</legend>
+
+                                                    <div id="msgbody" class="span12" placeholder="Employee ID"></div>
+                                                    <hr/>
+                                                    <input type="text" class="span5" /><br/>
+                                                    <textarea placeholder="Search Message" class="span5" style="resize: none;"></textarea><br/>
+                                                    <button type="button" class="btn btn-primary">Send</button>
+                                                    <select>
+                                                        <option>Announcement</option>
+                                                        <option>Message</option>
+                                                    </select>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                </div>';
                                     
                               }
-                              if($getType == "recoletter")
+                              if($getType == 'studentlist')
                               {
-                                  echo '<fieldset id="fieldset">
-                                    <legend>Recommendation Letter </legend>
-									
-									<table>
-									<form action="transaction.php" method="POST">
-									
-									<tr>
-										<td>Date: &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; <input type="text" name="date"  class="span4"/></td>
-									</tr>
-									
-									<tr>
-										<td>Gender: &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; 
-											<select name="gender" class="span4">
-											<option>Male</option>
-											<option>Female</option></td>
-											</select>
-									</tr>
-									
-									<tr>
-										<td>Name of Student: &nbsp; &nbsp;  &nbsp; <input type="text" name="studName" class="span4"/>
-										</td> 									
-									</tr>
-									
-									<tr>
-										<td> Course: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-										<select name="course" class="span4">
-											<option>Accountancy</option>
-											<option>Communication</option>
-											<option>Computer Engineering</option>
-											<option>Computer Science</option>
-											<option>Education</option>
-											<option>Electrical Engineering</option>
-											<option>Electronics and Communications Engineering</option>
-											<option>Hotel and Restaurant Management</option>
-											<option>Human Resource Development Management</option>
-											<option>Industrial Engineering</option>
-											<option>Information Technology</option>
-											<option>Management</option>
-											<option>Marketing Management</option>
-											<option>Mechanical Engineering</option>
-											<option>Nursing</option>
-											<option>Psychology</option>
-											<option>Tourism Management</option>
+                                echo' 
+                                    <fieldset>
+                                    <legend>Official List</legend>
+                                    <table>
+                                    <tr>
+                                        <td class="span3">
+                                            <b>Student ID</b>
+                                            <br/>
+                                        </td>
+                                        <td class="span3">
+                                           <b>Full Name</b>
+                                           <br/>
+                                        </td>
+                                        <td class="span2">
+                                            <b>Course</b>
+                                            <br/>
+                                        </td>
+                                    </tr>';
 
-										</select>
-										</td>
-									</tr>
-									
-									</table>
-									
-									
-									
-									<table>
-									<tr>
-										<td><label><h4> Request 1 </h4></label></td>
-										<td><label><h4> Request 2 <h4></label></td>
-									</tr>
-									
-									
-									
-									<tr>
-										<td>Contact Person: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="contactPerson1" class="span5"/></td>
-										<td>Contact Person: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="contactPerson2" class="span5"/></td>
-									</tr>
-									
-									<tr>
-										<td>Position: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<input type="text" name="position1" class="span5"/></td>
-										<td>Position: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<input type="text" name="position2" class="span5"/></td>
-									</tr>
-									
-									<tr>
-										<td>Name of Company: &nbsp;&nbsp; <input type="text" name="companyName1" class="span5"/></td> 
-										<td>Name of Company: &nbsp;&nbsp; <input type="text" name="companyName2" class="span5"/></td> 
-									</tr>
-									
-									<tr>
-										<td>Complete Address:  &nbsp; &nbsp;  <textarea name="companyAddress1" style="resize:none;" class="span6"></textarea></td>
-										<td>Complete Address:  &nbsp; &nbsp;  <textarea name="companyAddress2" style="resize:none;"  class="span6"></textarea></td> 
-									</tr>
-									
-									</table>
-									
-									<br />
-									
-									
-									<center>
-                                                                            <input type="submit" value="Submit" class=" btn btn-primary" />
-									</center>
-									</form>
-							
-									
-                                                                        </p>
-                                                                        </fieldset>';
+
+                                        $query = $db->selectData("*", 'stud_info', "course = '".$_SESSION['coursehandle']."'");
+                                        while($row = mysql_fetch_array($query))
+                                        {
+                                            echo '<tr>
+                                        <td>
+                                            <iclass="span1">'.$row['stud_ID'].'</i>
+                                        </td>
+                                        <td >
+                                            <iclass="span1">'.$row['fname'].' '.$row['lname'].'</i>
+                                        </td>
+                                        <td >
+                                            <iclass="span1">'.$row['course'].'</i>
+                                        </td>
+                                        <td >
+                                            <a href="admin.php?type=studview&id='.$row['stud_ID'].'"><span>View Profile</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="admin.php?type=ojtgrade&id='.$row['stud_ID'].'"><span>Compute Grade</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="admin.php?type=editstatus&id='.$row['stud_ID'].'"><span>Edit Status</span></a>&nbsp;&nbsp;&nbsp;&nbsp;      
+                                        </td>
+                                    </tr>';
+                                        }
+                                        
+                                        echo '</table></fieldset>';
+        
+        
+    
                               }
+                              
+                              if($getType == "editstatus")
+                              {
+                                   echo "
+                                        <table>
+                                            <tr></tr>
+                                        </table>
+                                       ";
+                              }
+                              if($getType == "ojtgrade")
+                              {
+                                $occupation = $_SESSION['occupation'];
+                                $studID = $_GET['id'];
+                                $studcourse;
+                                $query = $db->selectData("course", 'stud_info', "stud_ID = $studID ");
+                              
+                                  if($occupation == 'Moderator')
+                                  {
+                                      while($row = mysql_fetch_assoc($query))
+                                      {
+                                          $studcourse =  $row['course'];
+                                      }
+                                      
+                                      if($studcourse == "BSIT")
+                                      {
+                                          echo "
+                                              <fieldset>
+                                                <legend>OJT Grade</legend>
+                                                <b>Student ID:  </b><span>$studID</span>
+                                                 
+                                                    <hr/>
+                                                    <h4>Quizzes</h4>   
+                                                    <br/>
+                                                    <div class='row-fluid'>
+                                                        <div class='span2'>
+                                                            <b>Quiz 1</b>
+                                                        </div>
+                                                        <div class='span3'>
+                                                            <input type='text' id='quiz1' class='span3'/>
+                                                        </div>
+                                                        <div class='span2'>
+                                                            <b>Quiz 6</b>
+                                                        </div>
+                                                        <div class='span3'>
+                                                            <input type='text' id='quiz6' class='span3'/>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row-fluid'>
+                                                        <div class='span2'>
+                                                            <b>Quiz 2</b>
+                                                        </div>
+                                                        <div class='span3'>
+                                                            <input type='text' id='quiz2' class='span3'/>
+                                                        </div>
+                                                        <div class='span2'>
+                                                            <b>Quiz 7</b>
+                                                        </div>
+                                                        <div class='span3'>
+                                                            <input type='text' id='quiz7' class='span3'/>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row-fluid'>
+                                                        <div class='span2'>
+                                                            <b>Quiz 3</b>
+                                                        </div>
+                                                        <div class='span3'>
+                                                            <input type='text' id='quiz3' class='span3'/>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row-fluid'>
+                                                        <div class='span2'>
+                                                            <b>Quiz 4</b>
+                                                        </div>
+                                                        <div class='span3'>
+                                                            <input type='text' id='quiz4' class='span3'/>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row-fluid'>
+                                                        <div class='span2'>
+                                                            <b>Quiz 5</b>
+                                                        </div>
+                                                        <div class='span3'>
+                                                            <input type='text' id='quiz5' class='span3'/>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row-fluid'>
+                                                        <div class='span2'>
+                                                            <b>Average Quiz</b>
+                                                        </div>
+                                                        <div class='span3'>
+                                                            <b id='avequiz'></b>
+                                                        </div>
+                                                    </div>
+                                                    <div class='row-fluid'>
+                                                        <h4>Class Standing</h4>
+                                                    </div>
+                                                    <br/>
+                                                    <div class='row-fluid'>
+                                                        <div class='span2'>
+                                                            <input type='button' value='Submit Grade' id='quizbtn' class='btn btn-primary' />
+                                                        </div>
+                                                    </div>
+                                              </fieldset>
+                                              
+                                               
+                                              
+                                              ";
+                                      }
+                                      
+                                  }
+                                  
+                                  
+                                  
+                                  
+                                  
+                              }
+                              
+                              
                                if($getType == "profile")
                                {
                                                     echo "<fieldset>
@@ -273,33 +416,41 @@ if(!isset($_SESSION['acct_ID']))
                             </fieldset>";
                                }
                                
-                               if($getType == "ojtforms")
+                               if($getType == "studview")
                                {
-                                   echo '<fieldset>
-                                            <legend>OJT Forms</legend>
-                                            <h5>Information Technology</h5>
-                                            <table class="span12">
-                                                <tr>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="span4">Acceptance Form</td>
-                                                    <td><a href="/forms/_ojt/_it/ACCEPTANCE FORM 2012-2013.doc">Download</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="span4">SCST MOA</td>
-                                                    <td><a href="/forms/_ojt/_it/SCST MOA.doc">Download</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="span4">SCST training liability waiver</td>
-                                                    <td><a href="/forms/_ojt/_it/SCST MOA.doc">Download</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="span4">TP SCST Information Technology</td>
-                                                    <td><a href="/forms/_ojt/_it/TP SCST Information Technology.doc">Download</a></td>
-                                                </tr>
-                                            </table>
-                                        </fieldset>';
+                                   
+                                   $query = $db->selectData('*', 'stud_info',"stud_ID ='".$_GET['id']."'");
+                                   while ($row = mysql_fetch_array($query))
+                                   {
+                                       echo "<fieldset>
+                                        <legend>Student Profile</legend>
+
+                                        <table>
+                                            <tr>
+                                                <td class='span2'><strong>Name</strong></td>
+                                                <td class='span4'>".$row['fname']." ".$row['lname']."</td>
+                                                <td class='span2'><strong>Student ID</strong></td>
+                                                <td class='span4'>".$row['stud_ID']."</td>
+                                            </tr>
+                                            <tr>
+
+                                                <td class='span2'><strong>Course</strong></td>
+                                                <td class='span4'>".$row['course']."</td>
+                                                    <td class='span2'><strong>Address</strong></td>
+                                                <td class='span4'>".$row['address']."</td>
+                                            </tr>
+                                            <tr>
+                                                <td class='span2'><strong>Phone Number</strong></td>
+                                                <td class='span4'>".$row['phone']."</td>
+                                            </tr>
+                                            <tr>
+                                                <td class='span2'><strong>Email</strong></td>
+                                                <td class='span4'>".$row['email']."</td>
+                                            </tr>
+                                        </table>
+                                        <br/>
+                                    </fieldset>";
+                                   }
                                }
                                
                               
@@ -320,7 +471,7 @@ if(!isset($_SESSION['acct_ID']))
                               </script>
                               
                                <div id='msg'></div>
-                                
+                                <div style='height:100px;'></div>
 
                                 ";
                                       
