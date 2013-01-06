@@ -248,14 +248,30 @@
 
 
 <?php 
+include('class/Database.php');
+ $db = new Database();
+ 
+ $user = array();
 
- mysql_connect('localhost','root','');
- mysql_select_db('dbtest');
  
- $user = array("ramir","kamille","ramir","kamille","ramir","kamille");
- $temp = array();
+//$query = mysql_query("SELECT sender,msg FROM message ORDER BY sender DESC");
+//
+//while ($row = mysql_fetch_assoc($query))
+//{
+//    $user[] = $row['sender'];
+//}
+//$c = array_unique($user); 
+//$count = array_count_values($user);
+// foreach($c as $value)
+// {
+//     echo "From ".$value." Message ".$count[$value]." " ;
+// }
  
-// $query = mysql_query("SELECT sender FROM message");
+// $count = array_count_values($user);
+// 
+// echo $count["ramir"];
+ 
+ 
 //
 // while ($row = mysql_fetch_assoc($query))
 // {
@@ -280,12 +296,42 @@
 //         }
 //     }
 // }
-$stuff = array('orange','banana','banana','banana','orange', 'banana','orange', 'banana','orange', 'banana','orange');
-
-$c = array_unique($stuff); 
-var_dump($c);
 
 ?>
+
+<table>
+    <tr>
+        <td class="span2">
+            <b>Student ID</b>
+        </td>
+        <td class="span3">
+           <b>Full Name</b>
+        </td>
+        <td class="span2">
+            <b>Course</b>
+        </td>
+    </tr>
+    <?php 
+        
+        $query = $db->selectData('*', "stud_info");
+        while($row = mysql_fetch_array($query))
+        {
+            echo '<tr>
+        <td>
+            <iclass="span1">'.$row['stud_ID'].'</i>
+        </td>
+        <td >
+            <iclass="span1">'.$row['fname'].' '.$row['lname'].'</i>
+        </td>
+        <td >
+            <iclass="span1">'.$row['course'].'</i>
+        </td>
+    </tr>';
+        }
+        
+        
+    ?>
+</table>
 
 
     </body>
