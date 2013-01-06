@@ -39,7 +39,7 @@ if(isset($_GET['type']))
                     echo "<div class='well media' style='margin:0 10px;'><div class='media-body'><h5 class='media-header'>".$row['sender']."</h5><p>".$row['msg']."</p> <i style='font-size:8pt;'>Post on Jun 12 2012</i></div></div><br/>";
                 }
             }
-            if($occupation == "Moderator")
+            if($occupation == "R&DD Personnel")
             {
                 $dept = $_SESSION['coursehandle'];
 
