@@ -61,6 +61,27 @@ $db = new Database();
                        
                    });
                    
+               $('#companyVisit, #classAtt').keyup(function(){
+                   var company = parseInt($('#companyVisit').val());
+                   var classAtt = parseInt($('#classAtt').val());
+                   
+                   if(company == '0' || company == null || company == '' )
+                       {
+                           company = parseInt($('#companyVisit').val('0'));
+                       }
+                   if(classAtt == '0' || classAtt == null || classAtt == '')
+                   {
+                       classAtt = parseInt($('#classAtt').val('0'));
+                   }
+                   
+                    $('#monitorgrd').val((company+classAtt)/2);
+                   
+               });
+               
+               
+                   
+                   
+                   
                });
            </script>
            
@@ -211,7 +232,7 @@ $db = new Database();
                                                     <fieldset>
                                                     <legend>Inbox</legend>
 
-                                                    <div id="msgbody" class="span12" placeholder="Employee ID"></div>
+                                                    <div id="msgbody" placeholder="Employee ID"></div>
                                                     <hr/>
                                                     <input type="text" class="span5" /><br/>
                                                     <textarea placeholder="Search Message" class="span5" style="resize: none;"></textarea><br/>
@@ -247,8 +268,19 @@ $db = new Database();
                                         </td>
                                     </tr>';
 
-
-                                        $query = $db->selectData("*", 'stud_info', "course = '".$_SESSION['coursehandle']."'");
+                                        $occupation = $_SESSION['occupation'];
+                                        if($occupation == 'Moderator')
+                                        {
+                                            $query = $db->selectData("*", 'stud_info', "course = '".$_SESSION['coursehandle']."'");
+                                        }
+                                        
+                                        if($occupation == 'R&DD Personnel')
+                                        {
+                                            $query = $db->selectData("*", 'stud_info ORDER BY course ASC');
+                                       
+                                        }
+                                        
+                                        
                                         while($row = mysql_fetch_array($query))
                                         {
                                             echo '<tr>
@@ -262,9 +294,16 @@ $db = new Database();
                                             <iclass="span1">'.$row['course'].'</i>
                                         </td>
                                         <td >
-                                            <a href="admin.php?type=studview&id='.$row['stud_ID'].'"><span>View Profile</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="admin.php?type=studview&id='.$row['stud_ID'].'"><span>View Profile</span></a>&nbsp;&nbsp;&nbsp;&nbsp;                                            
                                             <a href="admin.php?type=ojtgrade&id='.$row['stud_ID'].'"><span>Compute Grade</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <a href="admin.php?type=editstatus&id='.$row['stud_ID'].'"><span>Edit Status</span></a>&nbsp;&nbsp;&nbsp;&nbsp;      
+                                               '; 
+                                            
+                                            if($occupation == 'R&DD Personnel')
+                                            {
+                                                echo '<a href="admin.php?type=editstatus&id='.$row['stud_ID'].'"><span>Edit Status</span></a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                                            }
+                                            
+                                            echo '
                                         </td>
                                     </tr>';
                                         }
@@ -277,12 +316,45 @@ $db = new Database();
                               
                               if($getType == "editstatus")
                               {
-                                   echo "
-                                        <table>
-                                            <tr></tr>
-                                        </table>
-                                       ";
+                                    $occupation = $_SESSION['occupation'];
+                                    $studID = $_GET['id'];
+                                    $studcourse;
+                                    $query = $db->selectData("course", 'stud_info', "stud_ID = $studID ");
+                                    
+                                    if($occupation == 'Moderator')
+                                    {
+                                        while($row = mysql_fetch_assoc($query))
+                                        {
+                                          $studcourse =  $row['course'];
+                                        }
+                                      
+                                      if($studcourse == 'BSIT')
+                                      {
+                                          echo "
+                                              <fieldset>
+                                                <legend>OJT Status - Moderator</legend>
+                                                <b>Student ID:  </b><span>$studID</span>
+                                                    
+                                                    
+                                                    <hr/>
+                                                    <h5>OJT Requirements</h5>
+                                                    <form action='#' method='POST'>
+                                                         <div class='row-fluid'>
+                                                            <div class='span9'>
+                                                                <b>Attendance Sheet</b>
+                                                            </div>
+                                                         </div>
+                                                    </form>
+                                              </fieldset>
+                                              ";
+                                      }
+                                      
+                                      
+                                    }
                               }
+                              
+                              
+                              
                               if($getType == "ojtgrade")
                               {
                                 $occupation = $_SESSION['occupation'];
@@ -301,81 +373,52 @@ $db = new Database();
                                       {
                                           echo "
                                               <fieldset>
-                                                <legend>OJT Grade</legend>
+                                                <legend>OJT Grade - Moderator</legend>
                                                 <b>Student ID:  </b><span>$studID</span>
-                                                 
+                                                    
+                                                    
                                                     <hr/>
-                                                    <h4>Quizzes</h4>   
+                                                    <h5>Company Monitoring Grade</h5>
+                                                    <form action='transaction.php?trans=monitorgrade' method='POST'>
+                                                    
+                                                        <div class='row-fluid'>
+
+                                                            <div class='span4 '>
+                                                                Phone Checking & Company Visit
+                                                            </div>
+                                                            <div class='span5'>
+                                                                <input type='text' id='companyVisit' class='span2' />
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class='row-fluid'>
+
+                                                            
+                                                            <div class='span4'>
+                                                                Regular Class Attendance & Promptness
+                                                            </div>
+                                                            <div class='span5'>
+                                                                <input type='text' id='classAtt' class='span2' />
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class='row-fluid'>
+                                                            <div class='span4'>
+                                                                <b>Grade</b>
+                                                            </div>
+                                                            <div class='span3'>
+                                                                <input type='text' id='monitorgrd' name='monitorgrd' class='span3' />
+                                                                <input type='hidden' value='$studID' name='stud_ID' />
+                                                            </div>
+                                                        </div>
+                                                    
                                                     <br/>
                                                     <div class='row-fluid'>
-                                                        <div class='span2'>
-                                                            <b>Quiz 1</b>
-                                                        </div>
-                                                        <div class='span3'>
-                                                            <input type='text' id='quiz1' class='span3'/>
-                                                        </div>
-                                                        <div class='span2'>
-                                                            <b>Quiz 6</b>
-                                                        </div>
-                                                        <div class='span3'>
-                                                            <input type='text' id='quiz6' class='span3'/>
+                                                        <div class='span5 offset5'>
+                                                            <input type='submit' value='Submit Grade' id='submitgrade' class='btn btn-primary' />
                                                         </div>
                                                     </div>
-                                                    <div class='row-fluid'>
-                                                        <div class='span2'>
-                                                            <b>Quiz 2</b>
-                                                        </div>
-                                                        <div class='span3'>
-                                                            <input type='text' id='quiz2' class='span3'/>
-                                                        </div>
-                                                        <div class='span2'>
-                                                            <b>Quiz 7</b>
-                                                        </div>
-                                                        <div class='span3'>
-                                                            <input type='text' id='quiz7' class='span3'/>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row-fluid'>
-                                                        <div class='span2'>
-                                                            <b>Quiz 3</b>
-                                                        </div>
-                                                        <div class='span3'>
-                                                            <input type='text' id='quiz3' class='span3'/>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row-fluid'>
-                                                        <div class='span2'>
-                                                            <b>Quiz 4</b>
-                                                        </div>
-                                                        <div class='span3'>
-                                                            <input type='text' id='quiz4' class='span3'/>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row-fluid'>
-                                                        <div class='span2'>
-                                                            <b>Quiz 5</b>
-                                                        </div>
-                                                        <div class='span3'>
-                                                            <input type='text' id='quiz5' class='span3'/>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row-fluid'>
-                                                        <div class='span2'>
-                                                            <b>Average Quiz</b>
-                                                        </div>
-                                                        <div class='span3'>
-                                                            <b id='avequiz'></b>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row-fluid'>
-                                                        <h4>Class Standing</h4>
-                                                    </div>
-                                                    <br/>
-                                                    <div class='row-fluid'>
-                                                        <div class='span2'>
-                                                            <input type='button' value='Submit Grade' id='quizbtn' class='btn btn-primary' />
-                                                        </div>
-                                                    </div>
+                                                    </form>
                                               </fieldset>
                                               
                                                

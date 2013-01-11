@@ -76,7 +76,7 @@ elseif($type == 'login')
         }
         
     }
-    elseif($occupation == 'Moderator')
+    elseif($occupation == 'Moderator' || $occupation == 'R&DD Personnel')
     {
         
         if($id != '')
@@ -140,6 +140,28 @@ elseif($type == 'logout')
 {
     session_destroy();
     header("Location: index.php");
+}
+
+elseif($type == 'monitorgrade')
+{
+    $strat = $_POST['monitorgrd'];
+    $id = $_POST['stud_ID'];
+    mysql_connect('localhost','root','');
+    mysql_select_db('msresearch');
+    $row = mysql_query("SELECT * FROM ojt_status WHERE stud_ID = $id LIMIT 1");
+    $num = mysql_num_rows($row);
+    if($num == 0)
+    {
+        mysql_query("INSERT INTO ojt_status(stud_ID,monitoringGrade) VALUES('$id','$strat')");
+    }
+    else
+    {
+        mysql_query("UPDATE ojt_status SET monitoringGrade = '$strat' WHERE stud_ID = $id");
+    }
+    
+    mysql_close();
+    header("http://localhost/msresearch/admin.php?type=ojtgrade&id=$id");
+    
 }
 
 

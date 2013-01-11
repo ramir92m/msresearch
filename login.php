@@ -51,7 +51,7 @@
                     <option selected="selected">Login As</option>
                     <option>Student</option>
                     <option>Moderator</option>
-                    <option>R&DD Administrator</option>
+                    <option>R&DD Personnel</option>
                     </select>
                </div>
                 

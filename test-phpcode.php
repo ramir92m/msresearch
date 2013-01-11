@@ -11,6 +11,8 @@
         <script src="js/jquery-1.8.3.js"></script>
            <script src="js/bootstrap.min.js"></script>
            
+           
+           
 <!--           <fieldset>
                <legend>OJT Status</legend>
                
@@ -336,3 +338,32 @@ include('class/Database.php');
 
     </body>
 </html>
+
+
+
+
+
+
+<!--$('#quiz1,#quiz2,#quiz3,#quiz4,#quiz5,#quiz6,#quiz7').keyup(function(){
+                       
+                       var quiz = "quiz";
+                       var gradeQuiz = 0;
+                       var total = 0;
+                       
+                       for(var i=1; i<=7;i++)
+                           {
+                                   if($('#'+quiz+i+'').val() == '')
+                                   {
+                                       continue;
+                                   }
+                                   else
+                                       {
+                                           gradeQuiz += parseInt($('#'+quiz+i+'').val());
+                                           total++;
+                                       }
+                           }
+                           
+                           $('#avequiz').html(gradeQuiz/total);
+                       
+                       
+                   });-->
