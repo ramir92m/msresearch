@@ -318,36 +318,182 @@ $db = new Database();
                               {
                                     $occupation = $_SESSION['occupation'];
                                     $studID = $_GET['id'];
+                                    $fullname;
                                     $studcourse;
-                                    $query = $db->selectData("course", 'stud_info', "stud_ID = $studID ");
+                                    $query = $db->selectData("*", 'stud_info', "stud_ID = $studID ");
                                     
-                                    if($occupation == 'Moderator')
+                                    if($occupation == 'R&DD Personnel')
                                     {
                                         while($row = mysql_fetch_assoc($query))
                                         {
                                           $studcourse =  $row['course'];
+                                          $fullname = $row['fname'].' '.$row['lname'];
                                         }
                                       
-                                      if($studcourse == 'BSIT')
-                                      {
+                                      
                                           echo "
                                               <fieldset>
-                                                <legend>OJT Status - Moderator</legend>
-                                                <b>Student ID:  </b><span>$studID</span>
-                                                    
+                                                <legend>OJT Status</legend>
+                                                <b>Student ID:  </b><span>$studID</span><br/>
+                                                <b>Full Name:  </b><span>$fullname</span><br/>
+                                                <b>Course:  </b><span>$studcourse</span>    
                                                     
                                                     <hr/>
-                                                    <h5>OJT Requirements</h5>
-                                                    <form action='#' method='POST'>
+                                                    <h5 class='offset5'>OJT Requirements</h5>
+                                                    
+                                                    <form action='transaction.php?trans=ojtstatus&id=$studID&course=$studcourse' method='POST'>
+                                                        
+                                                        <hr/>
                                                          <div class='row-fluid'>
-                                                            <div class='span9'>
-                                                                <b>Attendance Sheet</b>
+                                                            <div class='span2 offset1'>
+                                                                <label>Performance Evaluation Rating</label>
+                                                            </div>
+                                                             <div class='span3'>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='performanceEval' value='Yes' />Yes
+                                                                    
+                                                                </label>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='performanceEval' value='No' checked='checked' />No
+                                                                </label>
+                                                            </div>
+                                                            
+                                                            <div class='span2 offset1'>
+                                                                <label>Nomination Form (optional)</label>
+                                                            </div>
+                                                             <div class='span3'>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='ojtnomination' value='Yes' />Yes
+                                                                    
+                                                                </label>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='ojtnomination' value='No' checked='checked' />No
+                                                                </label>
+                                                            </div>
+                                                            
+                                                         </div>
+                                                         <hr />
+                                                         <div class='row-fluid'>
+                                                            <div class='span1 offset1'>
+                                                                Certification of OJT Completion
+                                                            </div>
+                                                            <div class='span3 offset1'>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='certificate' value='Yes' />Yes
+                                                                    
+                                                                </label>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='certificate' value='No' checked='checked' />No
+                                                                </label>
+                                                            </div>
+                                                            
+                                                            <div class='span1 offset1'>
+                                                                Daily Time <br/> Record
+                                                            </div>
+                                                            <div class='span2 offset1'>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='dtr' value='Yes' />Yes
+                                                                    
+                                                                </label>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='dtr' value='No' checked='checked' />No
+                                                                </label>
                                                             </div>
                                                          </div>
+                                                         <hr/>
+                                                         
+                                                         <div class='row-fluid'>
+                                                            <div class='span1 offset1'>
+                                                                Narrative Report
+                                                            </div>
+                                                            <div class='span3 offset1'>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='narrative' value='Yes' />Yes
+                                                                    
+                                                                </label>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='narrative' value='No' checked='checked' />No
+                                                                </label>
+                                                            </div>
+                                                            <div class='span1 offset1'>
+                                                                OJT Evaluation Form
+                                                            </div>
+                                                            <div class='span2 offset1'>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='ojteval' value='Yes' />Yes
+                                                                    
+                                                                </label>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='ojteval' value='No' checked='checked' />No
+                                                                </label>
+                                                            </div>
+                                                         </div>
+                                                         <hr />
+                                                         <div class='row-fluid'>
+                                                            <div class='span1 offset1'>
+                                                                Company Profile
+                                                            </div>
+                                                            <div class='span3 offset1'>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='comprofile' value='Yes' />Yes
+                                                                    
+                                                                </label>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='comprofile' value='No' checked='checked' />No
+                                                                </label>
+                                                            </div>
+                                                            
+                                                         ";
+                                                         echo "
+                                                             <div class='span1 offset1'>
+                                                                    Journal
+                                                            </div>
+                                                            <div class='span3 offset1'>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='journal' value='Yes' />Yes
+                                                                    
+                                                                </label>
+                                                                <label class='radio'>
+                                                                    <input type='radio' name='journal' value='No' checked='checked' />No
+                                                                </label>
+                                                            </div>
+                                                             
+
+                                                           </div>
+                                                           
+                                                             ";
+                                                            
+                                                         if($studcourse == 'BSPsy')
+                                                         {
+                                                             echo "
+                                                                    <hr />
+                                                                    <div class='row-fluid'>
+                                                                        <div class='span1 offset1'>
+                                                                            Case Study
+                                                                        </div>
+                                                                        
+                                                                        <div class='span3 offset1'>
+                                                                            <label class='radio'>
+                                                                                <input type='radio' name='casestudy' value='Yes' />Yes
+                                                                    
+                                                                            </label>
+                                                                            <label class='radio'>
+                                                                                <input type='radio' name='casestudy' value='No' checked='checked' />No
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                 ";
+                                                         }
+                                                         
+                                                         
+                                              echo "
+                                                    
+                                                    <hr />
+                                                    <input type='submit' Value='Submit' class='btn-primary offset5' />
                                                     </form>
                                               </fieldset>
                                               ";
-                                      }
+                                      
                                       
                                       
                                     }

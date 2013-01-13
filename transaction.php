@@ -164,6 +164,65 @@ elseif($type == 'monitorgrade')
     
 }
 
+elseif($type == 'ojtstatus')
+{
+    
+    $studID = $_GET['id'];
+    $course = $_GET['course'];
+    $performanceEval = $_POST['performanceEval'];
+    $nominationform = $_POST['ojtnomination'];
+    $certificate = $_POST['certificate'];
+    $dtr = $_POST['dtr'];
+    $narrative = $_POST['narrative'];
+    $ojteval = $_POST['ojteval'];
+    $companyprof = $_POST['comprofile'];
+    $journal = $_POST['journal'];
+    
+    
+    if(isset($_POST['casestudy']))
+    {
+        $caseStudy = $_POST['casestudy'];
+    }
+    
+    
+    
+    $acct->connect();
+    $row = mysql_query("SELECT stud_ID FROM ojt_req WHERE stud_ID = $studID LIMIT 1 ");
+    $num = mysql_num_rows($row);
+    
+    if($num > 0)
+    {
+        
+        if($course == 'BSPsy')
+        {
+            mysql_query("UPDATE ojt_req SET performanceEval = '$performanceEval' , nominationForm = '$nominationform',dtrForm = '$dtr',journalForm = '$journal',ojtEvalForm = '$ojteval',caseStudy = '$caseStudy',companyProfile = '$companyprof',certificate = '$certificate' WHERE stud_ID = $studID ");
+        }
+        else
+        {
+             mysql_query("UPDATE ojt_req SET performanceEval = '$performanceEval' , nominationForm = '$nominationform',dtrForm = '$dtr',journalForm = '$journal',ojtEvalForm = '$ojteval',companyProfile = '$companyprof',certificate = '$certificate' WHERE stud_ID = $studID ");
+        
+        }
+        
+    }
+    else
+    {
+        if($course == 'BSPsy')
+        {
+            mysql_query("INSERT INTO ojt_req(stud_ID,performanceEval,nominationForm,dtrForm,journalForm,ojtEvalForm,caseStudy,companyProfile,certificate) VALUES('$studID','$performanceEval','$nominationform','$dtr','$journal','$ojteval','$caseStudy','$companyprof','$certificate')");
+        }
+        else
+        {
+            mysql_query("INSERT INTO ojt_req(stud_ID,performanceEval,nominationForm,dtrForm,journalForm,ojtEvalForm,ojtEvalForm,companyProfile,certificate) VALUES('$studID','$performanceEval','$nominationform','$dtr','$journal','$ojteval','$companyprof','$certificate')");
+        }
+    }
+    
+    mysql_close();
+   
+    
+    
+    
+}
+
 
 
 
